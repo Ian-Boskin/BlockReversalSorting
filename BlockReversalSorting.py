@@ -1,8 +1,10 @@
-from re import search
+from collections import deque
 
 
 def main():
     numbers = [int(num) for num in input("Please enter sequence seperated by spaces: ").split(' ')]
+    # numbers[1:4] = reversed(numbers[1:4])
+    # print(numbers)
     num, num1 = bfs_sort(numbers)
     print(num)
     print(num1)
@@ -14,18 +16,19 @@ def inOrder(numbers):
     return True
 
 def bfs_sort(numbers):
-    searchTree = [numbers]
+    searchTree = deque([numbers])
     nodesVisited = 1
     while not(inOrder(searchTree[0])):
-        currNode = searchTree.pop(0)
+        currNode = searchTree.popleft()
         nodesVisited += 1
-        for blockLength in range(2, len(numbers) + 1):
-            for switchIndex in range(len(numbers) - blockLength + 1):
-                newNode = currNode[0:switchIndex]
-                reversedBlock = currNode[switchIndex:switchIndex + blockLength]
-                reversedBlock.reverse()
-                newNode += reversedBlock
-                newNode += currNode[switchIndex + blockLength:]
+        for switchIndex in range(len(numbers)):
+            startNode = currNode[0:switchIndex]
+            for blockLength in range(2, len(numbers) - switchIndex + 1):
+                if switchIndex == 0:
+                    reversedBlock = currNode[switchIndex + blockLength - 1::-1]
+                else:
+                    reversedBlock = currNode[switchIndex + blockLength - 1:switchIndex - 1:-1]
+                newNode = startNode + reversedBlock + currNode[switchIndex + blockLength:]
                 searchTree.append(newNode)
     path = [searchTree[0]]
     branchingFactor = 0
