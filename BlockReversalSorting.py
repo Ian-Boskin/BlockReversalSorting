@@ -99,7 +99,7 @@ def heuristic(numbers):
         diff = numbers[i] - numbers[i + 1]
         if diff != 1 and diff != -1:
             h += 1
-    return h
+    return h / 2
 
 def astar_sort(numbers):
     queue = []
